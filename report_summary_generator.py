@@ -34,13 +34,21 @@ def main() -> None:
 
     output_document.save(f"{OUTPUT_FILENAME}{DOCX_EXTENSION}")
 
-    # print([x.text for x in document.paragraphs if x.text == "Data:"])
-    # for paragraph in document.paragraphs:
-    #     print(paragraph.text)
-
 
 def extract_information(input_document: Document) -> Tuple[str, str, str]:
-    pass
+    date = ""
+    mode = ""
+    summary = ""
+
+    for paragraph in input_document.paragraphs:
+        if DATE_LABEL in paragraph.text:
+            date = str(paragraph.text).replace(DATE_LABEL, "")
+        if MODE_LABEL in paragraph.text:
+            mode = str(paragraph.text).replace(MODE_LABEL, "")
+        if SUMMARY_LABEL in paragraph.text:
+            summary = str(paragraph.text).replace(SUMMARY_LABEL, "")
+
+    return date, mode, summary
 
 
 def prepare_args() -> Namespace:
