@@ -3,7 +3,7 @@ from argparse import ArgumentParser, Namespace
 from typing import List, Tuple
 
 from docx import Document
-from docx.enum.text import WD_BREAK
+from docx.enum.text import WD_BREAK, WD_PARAGRAPH_ALIGNMENT
 
 """
     How to run:
@@ -30,9 +30,19 @@ def main() -> None:
         input_document: Document = Document(filepath)
         date, mode, summary = extract_information(input_document)
 
-        output_document.add_paragraph(f"{DATE_LABEL} {date}")
-        output_document.add_paragraph(f"{MODE_LABEL} {mode}")
-        output_document.add_paragraph(f"{SUMMARY_LABEL} {summary}")
+        date_paragraph = output_document.add_paragraph()
+        date_paragraph.add_run(f"{DATE_LABEL}").bold = True
+        date_paragraph.add_run(f" {date}")
+
+        mode_paragraph = output_document.add_paragraph()
+        mode_paragraph.add_run(f"{MODE_LABEL}").bold = True
+        mode_paragraph.add_run(f" {mode}")
+
+        summary_paragraph = output_document.add_paragraph()
+        summary_paragraph.add_run(f"{SUMMARY_LABEL}").bold = True
+        summary_paragraph.add_run(f" {summary}")
+        summary_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
+
         output_document.add_paragraph().add_run().add_break(WD_BREAK.LINE)
 
     output_document.save(f"{OUTPUT_FILENAME}{DOCX_EXTENSION}")
@@ -45,13 +55,13 @@ def extract_information(input_document: Document) -> Tuple[str, str, str]:
 
     for paragraph in input_document.paragraphs:
         if DATE_LABEL in paragraph.text:
-            date = str(paragraph.text).replace(DATE_LABEL, "")
+            date = str(paragraph.text).replace(DATE_LABEL, "").strip()
             continue
         if MODE_LABEL in paragraph.text:
-            mode = str(paragraph.text).replace(MODE_LABEL, "")
+            mode = str(paragraph.text).replace(MODE_LABEL, "").strip()
             continue
         if SUMMARY_LABEL in paragraph.text:
-            summary = str(paragraph.text).replace(SUMMARY_LABEL, "")
+            summary = str(paragraph.text).replace(SUMMARY_LABEL, "").strip()
             continue
 
     return date, mode, summary
