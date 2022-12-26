@@ -7,7 +7,7 @@ from docx.enum.text import WD_BREAK
 
 """
     How to run:
-        
+        python summary_generator.py -p ./
 """
 
 DOCX_EXTENSION: str = ".docx"
@@ -20,7 +20,10 @@ SUMMARY_LABEL: str = "Podsumowanie:"
 def main() -> None:
     args = prepare_args()
     path: str = args.path
-    filepaths: List[str] = glob.glob(f"{path}*{DOCX_EXTENSION}")
+    filepaths: List[str] = [
+        filepath for filepath in glob.glob(f"{path}*{DOCX_EXTENSION}")
+        if f"{OUTPUT_FILENAME}{DOCX_EXTENSION}" not in filepath
+    ]
 
     output_document = Document()
     for filepath in filepaths:
@@ -43,10 +46,13 @@ def extract_information(input_document: Document) -> Tuple[str, str, str]:
     for paragraph in input_document.paragraphs:
         if DATE_LABEL in paragraph.text:
             date = str(paragraph.text).replace(DATE_LABEL, "")
+            continue
         if MODE_LABEL in paragraph.text:
             mode = str(paragraph.text).replace(MODE_LABEL, "")
+            continue
         if SUMMARY_LABEL in paragraph.text:
             summary = str(paragraph.text).replace(SUMMARY_LABEL, "")
+            continue
 
     return date, mode, summary
 
