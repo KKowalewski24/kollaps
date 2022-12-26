@@ -22,7 +22,7 @@ def main() -> None:
     date_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
 
     mode_paragraph = document.add_paragraph()
-    mode_paragraph.add_run(f"{MODE_LABEL} ").bold = True
+    mode_paragraph.add_run(f"{MODE_LABEL}").bold = True
     mode_paragraph.add_run(" ")
     mode_paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.RIGHT
 
