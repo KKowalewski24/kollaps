@@ -24,6 +24,9 @@ def main() -> None:
         filepath for filepath in glob.glob(f"{path}*{DOCX_EXTENSION}")
         if f"{OUTPUT_FILENAME}{DOCX_EXTENSION}" not in filepath
     ]
+    
+    if len(filepaths) == 0:
+        raise Exception("No reports were found!")
 
     output_document = Document()
     for filepath in filepaths:
